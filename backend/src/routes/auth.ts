@@ -17,17 +17,13 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - email
+ *               - username
  *               - password
  *             properties:
- *               name:
+ *               username:
  *                 type: string
- *                 example: John Doe
- *               email:
- *                 type: string
- *                 format: email
- *                 example: john@example.com
+ *                 minLength: 3
+ *                 example: johndoe
  *               password:
  *                 type: string
  *                 format: password
@@ -62,13 +58,12 @@ router.post('/register', validateRegistration, authController.register);
  *           schema:
  *             type: object
  *             required:
- *               - email
+ *               - username
  *               - password
  *             properties:
- *               email:
+ *               username:
  *                 type: string
- *                 format: email
- *                 example: john@example.com
+ *                 example: johndoe
  *               password:
  *                 type: string
  *                 format: password

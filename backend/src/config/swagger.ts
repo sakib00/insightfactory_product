@@ -33,21 +33,61 @@ const options: swaggerJsdoc.Options = {
           type: 'object',
           properties: {
             id: { type: 'integer', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            email: { type: 'string', example: 'john@example.com' },
+            username: { type: 'string', example: 'johndoe' },
+          },
+        },
+        Skill: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            user_id: { type: 'integer', example: 1 },
+            filename: { type: 'string', example: 'my-skill.ts' },
+            file_size: { type: 'integer', example: 1024 },
+            name: { type: 'string', example: 'My Skill' },
+            description: { type: 'string', example: 'A useful skill', nullable: true },
+            version: { type: 'string', example: '1.0.0' },
+            author: { type: 'string', example: 'John Doe', nullable: true },
+            content: { type: 'string', example: 'export default function...' },
+            is_public: { type: 'boolean', example: true },
+            download_count: { type: 'integer', example: 42 },
+            clone_count: { type: 'integer', example: 10 },
             created_at: { type: 'string', format: 'date-time' },
             updated_at: { type: 'string', format: 'date-time' },
           },
         },
-        Post: {
+        SkillWithTags: {
+          allOf: [
+            { $ref: '#/components/schemas/Skill' },
+            {
+              type: 'object',
+              properties: {
+                tags: {
+                  type: 'array',
+                  items: { $ref: '#/components/schemas/Tag' },
+                },
+              },
+            },
+          ],
+        },
+        SkillWithOwner: {
+          allOf: [
+            { $ref: '#/components/schemas/SkillWithTags' },
+            {
+              type: 'object',
+              properties: {
+                owner: { $ref: '#/components/schemas/User' },
+              },
+            },
+          ],
+        },
+        Tag: {
           type: 'object',
           properties: {
             id: { type: 'integer', example: 1 },
-            title: { type: 'string', example: 'My First Post' },
-            content: { type: 'string', example: 'This is the post content' },
-            user_id: { type: 'integer', example: 1 },
+            name: { type: 'string', example: 'TypeScript' },
+            slug: { type: 'string', example: 'typescript' },
+            usage_count: { type: 'integer', example: 15 },
             created_at: { type: 'string', format: 'date-time' },
-            updated_at: { type: 'string', format: 'date-time' },
           },
         },
         AuthResponse: {
@@ -58,8 +98,7 @@ const options: swaggerJsdoc.Options = {
               type: 'object',
               properties: {
                 id: { type: 'integer', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-                email: { type: 'string', example: 'john@example.com' },
+                username: { type: 'string', example: 'johndoe' },
               },
             },
           },

@@ -1,16 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
-import { isValidEmail, isValidPassword } from '../utils/validation';
+import { isValidPassword } from '../utils/validation';
 
 export const validateRegistration = (req: Request, res: Response, next: NextFunction): void => {
-  const { name, email, password } = req.body;
+  const { username, password } = req.body;
 
-  if (!name || !email || !password) {
-    res.status(400).json({ error: 'Name, email, and password are required' });
+  if (!username || !password) {
+    res.status(400).json({ error: 'Username and password are required' });
     return;
   }
 
-  if (!isValidEmail(email)) {
-    res.status(400).json({ error: 'Invalid email format' });
+  if (username.trim().length < 3) {
+    res.status(400).json({ error: 'Username must be at least 3 characters long' });
     return;
   }
 
@@ -23,31 +23,26 @@ export const validateRegistration = (req: Request, res: Response, next: NextFunc
 };
 
 export const validateLogin = (req: Request, res: Response, next: NextFunction): void => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
-  if (!email || !password) {
-    res.status(400).json({ error: 'Email and password are required' });
-    return;
-  }
-
-  if (!isValidEmail(email)) {
-    res.status(400).json({ error: 'Invalid email format' });
+  if (!username || !password) {
+    res.status(400).json({ error: 'Username and password are required' });
     return;
   }
 
   next();
 };
 
-export const validatePost = (req: Request, res: Response, next: NextFunction): void => {
-  const { title, content } = req.body;
+export const validateSkill = (req: Request, res: Response, next: NextFunction): void => {
+  const { content } = req.body;
 
-  if (!title || !content) {
-    res.status(400).json({ error: 'Title and content are required' });
+  if (!content) {
+    res.status(400).json({ error: 'Content is required' });
     return;
   }
 
-  if (title.trim().length === 0 || content.trim().length === 0) {
-    res.status(400).json({ error: 'Title and content cannot be empty' });
+  if (content.trim().length === 0) {
+    res.status(400).json({ error: 'Content cannot be empty' });
     return;
   }
 

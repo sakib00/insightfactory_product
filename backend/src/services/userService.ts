@@ -1,14 +1,14 @@
 import { UserModel } from '../models';
-import { UserResponse } from '../types';
+import { UserPublic } from '../types';
 
 export class UserService {
   private userModel = new UserModel();
 
-  getAllUsers(): UserResponse[] {
+  getAllUsers(): UserPublic[] {
     return this.userModel.findAll();
   }
 
-  getUserById(id: number): UserResponse {
+  getUserById(id: number): UserPublic {
     const user = this.userModel.findById(id);
 
     if (!user) {
@@ -18,8 +18,8 @@ export class UserService {
     return user;
   }
 
-  updateUser(id: number, data: { name?: string; email?: string }): UserResponse {
-    const user = this.userModel.update(id, data);
+  updateUser(id: number, data: { username?: string; password?: string }): UserPublic {
+    const user = this.userModel.update(id, data.username, data.password);
 
     if (!user) {
       throw new Error('User not found');

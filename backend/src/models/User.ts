@@ -1,35 +1,35 @@
 import getDatabase from '../database/connection';
-import { User, UserCreateInput, UserResponse } from '../types';
+import { User, UserPublic } from '../types';
 
 export class UserModel {
   private db = getDatabase();
 
-  findAll(): UserResponse[] {
-    const users = this.db.prepare('SELECT id, name, email, created_at, updated_at FROM users').all() as User[];
+  findAll(): UserPublic[] {
+    const users = this.db.prepare('SELECT id, username FROM users').all() as UserPublic[];
     return users;
   }
 
-  findById(id: number): UserResponse | null {
+  findById(id: number): UserPublic | null {
     const user = this.db
-      .prepare('SELECT id, name, email, created_at, updated_at FROM users WHERE id = ?')
-      .get(id) as User | undefined;
+      .prepare('SELECT id, username FROM users WHERE id = ?')
+      .get(id) as UserPublic | undefined;
     return user || null;
   }
 
-  findByEmail(email: string): User | null {
+  findByUsername(username: string): User | null {
     const user = this.db
-      .prepare('SELECT * FROM users WHERE email = ?')
-      .get(email) as User | undefined;
+      .prepare('SELECT * FROM users WHERE username = ?')
+      .get(username) as User | undefined;
     return user || null;
   }
 
-  create(userData: UserCreateInput): UserResponse {
+  create(username: string, passwordHash: string): UserPublic {
     const stmt = this.db.prepare(`
-      INSERT INTO users (name, email, password)
-      VALUES (?, ?, ?)
+      INSERT INTO users (username, password_hash)
+      VALUES (?, ?)
     `);
 
-    const result = stmt.run(userData.name, userData.email, userData.password);
+    const result = stmt.run(username, passwordHash);
     const user = this.findById(Number(result.lastInsertRowid));
 
     if (!user) {
@@ -39,21 +39,17 @@ export class UserModel {
     return user;
   }
 
-  update(id: number, userData: Partial<UserCreateInput>): UserResponse | null {
+  update(id: number, username?: string, passwordHash?: string): UserPublic | null {
     const fields: string[] = [];
     const values: any[] = [];
 
-    if (userData.name) {
-      fields.push('name = ?');
-      values.push(userData.name);
+    if (username) {
+      fields.push('username = ?');
+      values.push(username);
     }
-    if (userData.email) {
-      fields.push('email = ?');
-      values.push(userData.email);
-    }
-    if (userData.password) {
-      fields.push('password = ?');
-      values.push(userData.password);
+    if (passwordHash) {
+      fields.push('password_hash = ?');
+      values.push(passwordHash);
     }
 
     if (fields.length === 0) return this.findById(id);

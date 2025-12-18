@@ -1,10 +1,8 @@
-import getDatabase from '../connection';
-
 export const runSeeders = (): void => {
-  const db = getDatabase();
-
   // Example seed data - uncomment if needed
   /*
+  import getDatabase from '../connection';
+  const db = getDatabase();
   const insertUser = db.prepare(`
     INSERT INTO users (name, email, password)
     VALUES (?, ?, ?)

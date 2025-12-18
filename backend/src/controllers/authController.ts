@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { AuthService } from '../services';
-import { RegisterInput, LoginInput } from '../types';
+import { CreateUserRequest, LoginRequest } from '../types';
 
 const authService = new AuthService();
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    const input: RegisterInput = req.body;
+    const input: CreateUserRequest = req.body;
     const result = await authService.register(input);
     res.status(201).json(result);
   } catch (error) {
@@ -20,7 +20,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
-    const input: LoginInput = req.body;
+    const input: LoginRequest = req.body;
     const result = await authService.login(input);
     res.json(result);
   } catch (error) {
